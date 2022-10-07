@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { text } from "stream/consumers";
+import ListItem from "./components/listItem";
 
-function App() {
+const App = () => {
+  const [list, setList] = useState<Array<string>>([]);
+  const [textFieldValue, setTextFieldValue] = useState("");
+
+  const myNumber = 1 + 3;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Todo List</h1>
+      <input
+        type="text"
+        value={textFieldValue}
+        onChange={(e) => setTextFieldValue(e.target.value)}
+      />
+      <button
+        onClick={() => {
+          setList((prev) => {
+            setTextFieldValue("");
+            return [...prev, textFieldValue];
+          });
+        }}
+      >
+        Add
+      </button>
+      <ul>
+        {list.map((item, index) => {
+          return (
+            <ListItem
+              text={item}
+              onChange={(newValue) => {
+                setList((prev) => {
+                  const newArr = prev.slice();
+                  newArr[index] = newValue;
+                  return newArr;
+                });
+              }}
+              onDelete={() => {
+                setList((prev) => {
+                  const newArr = prev.slice();
+                  newArr.splice(index);
+                  return newArr;
+                });
+              }}
+            />
+          );
+        })}
+      </ul>
     </div>
   );
-}
+};
 
 export default App;
